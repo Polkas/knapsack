@@ -2,14 +2,14 @@
 title: "Amino_KasaRomana"
 author: "Maciej Nasinski"
 date: "6 paŸdziernika 2016"
-output: pdf_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Poni¿sza analiza zosta³a przeprowadzona w celach edukacyjnych przy najwy¿szej starannoœci. Wyko¿ystuj¹c baze danych zawieraj¹c¹ wartoœci 1002 kuponów zbadano ich charakterystyki oraz szanse na wygran¹. W procesie znajdowania par kuponów potzrebnych do wygrania wyko¿ystano algorytm knapsack. Wszystkie obliczenia zosta³y wykonane w programie R.
+Poni¿sza analiza zosta³a przeprowadzona w celach edukacyjnych przy najwy¿szej starannoœci. Wykorzystuj¹c baze danych zawieraj¹c¹ wartoœci 1002 kuponów zbadano ich charakterystyki oraz szanse na wygran¹. W procesie znajdowania par kuponów potzrebnych do wygrania wyko¿ystano algorytm knapsack. Wszystkie obliczenia zosta³y wykonane w programie R.
 
 [Regulamin Promocji](http://www.kasaromana.pl/Regulamin-Kasa-Romana.pdf)
 

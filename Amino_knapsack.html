@@ -122,12 +122,12 @@ $(document).ready(function () {
 </div>
 
 
-<p>Poniższa analiza została przeprowadzona w celach edukacyjnych przy najwyższej staranności. Wykożystując baze danych zawierającą wartości 1002 kuponów zbadano ich charakterystyki oraz szanse na wygraną. W procesie znajdowania par kuponów potzrebnych do wygrania wykożystano algorytm knapsack. Wszystkie obliczenia zostały wykonane w programie R.</p>
+<p>Poniższa analiza została przeprowadzona w celach edukacyjnych przy najwyższej staranności. Wykorzystując baze danych zawierającą wartości 1002 kuponów zbadano ich charakterystyki oraz szanse na wygraną. W procesie znajdowania par kuponów potzrebnych do wygrania wykożystano algorytm knapsack. Wszystkie obliczenia zostały wykonane w programie R.</p>
 <p><a href="http://www.kasaromana.pl/Regulamin-Kasa-Romana.pdf">Regulamin Promocji</a></p>
 <p>Żródło bazy danych:</p>
 <p><a href="https://www.facebook.com/BezKanalu/">Warotści z 1000 zupek otwartych na kanale Youtube “Bez Kanału”</a></p>
 <p>Wgranie wszystkich obserwacji.</p>
-<pre class="r"><code>kupony = as.numeric(readLines(&quot;./Python/knapsack.txt&quot;))
+<pre class="r"><code>kupony = as.numeric(readLines(&quot;./knapsack.txt&quot;))
 
 kupony</code></pre>
 <pre><code>##    [1] 455 650  26 464  26 750 490 520 399 390 750 455 104 260  26 438 633
