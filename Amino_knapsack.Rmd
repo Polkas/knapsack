@@ -1,86 +1,87 @@
 ---
-title: "Amino_KasaRomana"
+title: "How to orginze perfect lottery where people never win anything - Amino KasaRomana"
 author: "Maciej Nasinski"
-date: "6 paŸdziernika 2016"
-output: html_document
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    fontsize: 12pt
+    spacing: double
+    fig_caption: yes
+    indent: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Poni¿sza analiza zosta³a przeprowadzona w celach edukacyjnych przy najwy¿szej starannoœci. Wykorzystuj¹c baze danych zawieraj¹c¹ wartoœci 1002 kuponów zbadano ich charakterystyki oraz szanse na wygran¹. W procesie znajdowania par kuponów potzrebnych do wygrania wyko¿ystano algorytm knapsack. Wszystkie obliczenia zosta³y wykonane w programie R.
+In Poland there is a very popular lottery organized by a Amino food company named Kasa Romana.   
+It was established first time in 90's and the last attempt known by me in the 2016.  
+There were gathered a sufficient data about it because of the YouTube channel which testing certain products in thousands during some promations.  
+[BezKanalu YouTube channel](https://www.facebook.com/BezKanalu/) brought precisely 1002 coupons from last event.   
+The main objectives are to find patterns for this data and make sure if the coupons give any chance to win some real money.  
+The main rule is that people could win money if the have a set of coupons which sum to full hundreds (100, 200, ...) up to 1000.  
+The knapsack algorithm was used to check if there are some combinations of coupons which enable to win some money.  
+All processing is done from R programming environment.  
 
-[Regulamin Promocji](http://www.kasaromana.pl/Regulamin-Kasa-Romana.pdf)
-
-¯ród³o bazy danych:
-
-[Warotœci z 1000 zupek otwartych na kanale Youtube "Bez Kana³u"](https://www.facebook.com/BezKanalu/)
-
-Wgranie wszystkich obserwacji.
+Loading the data:
 
 ```{r}
-kupony = as.numeric(readLines("./knapsack.txt"))
+coupons = as.numeric(readLines("./knapsack.txt"))
 
-kupony
+head(coupons, 30)
 ```
 
-Wykres rosn¹cych wartoœci unikalnych:
 
-Z wszystkich wartoœci wyrzucono te powtarzaj¹ce siê a nastêpnie posortowano do najmniejszej do najwiekszej.
+Sorted table of frequencies:
 
 ```{r}
-plot(sort(unique(kupony)))
+sort(table(coupons))
 ```
 
-£atwo zaobserwowaæ ¿e wystêpuje pewna zale¿noœæ.
-
-Histrogram:
+Histrogram might be helpful to find certain patterns:
 
 ```{r}
-hist(kupony,breaks=100)
+hist(coupons,breaks=100)
 ```
 
-Histogram ukazuje ¿e pewne wartoœci powtarzaj¹ siê du¿o czêœciej ni¿ inne.
+**Numbers seems to be generated from 2 specific patterns:**
 
-Liczby wydaj¹ siê byæ generowane z dwóch scie¿ek:
-
-- jako kolejne iloczyny liczby 13 zaczynaj¹c od 26
-- liczba 165 oraz sumowanie jej z kolejnymi iloczynami liczby 13
+- multiplication of 13 starting from 26
+- multiplication of 13 plus 165
 
 ```{r}
-rep13 = sapply(1:52,function(x) 13*x)
+rep13 = sapply(1:52, function(x) 13*x)
 
-rep2_13 = sapply(1:45,function(x) 165+(13*x))
+rep2_13 = sapply(0:45, function(x) 165 + (13*x))
 
-sum(kupony %in% rep13 & kupony %in% rep2_13)
+all(coupons %in% c(rep13, rep2_13))
 ```
 
-Wszystkie kupony z naszej bazy danych znajduj¹ siê poœród wszystkich wygenerownych liczb z 2 podanych œcie¿ek.
+All of our coupons comes from this 2 sequences.
 
-Porównanie kuponów z bazy danych oraz wygnerowanych. 
-
-Do kuponów z bazy danych dodano kupon o kwocie 178.
+Compering coupons with artificially generated ones form two presented sequences.
 
 ```{r}
-a = sort(c(unique(kupony),178))
+a = sort(c(unique(coupons),178)) # one coupon has to be added 165 + 13
 b = sort(c(sapply(0:45,function(x) 165+(13*x)),sapply(2:50,function(x) (13*x))))
 
-both = data.frame(realne = a, wygenerowane = b)
+both = data.frame(real = a, generated = b)
 
-both
+head(both)
+
+tail(both)
 ```
 
 *Single knapsack problem:*
 
-Knapsack to metoda optymalizacyjna, linear programming dla liczb ca³kowitych.
+Knapsack is an optimization method, linear programming for integers.
 
-WYkorzystuj¹c po 100 wartoœci z ka¿dego unikalnego kuponu przerowadzono wnioskowanie. Nalezy zanzaczyæ i¿ wykorzystuj¹c po jednej wartoœci ka¿dego kuponu wyniki sa identyczne. Dla przypomnienia poszukujemy takiej kombiacji kuponów, która bêdzie siê sumowaæ do kolejnych iloczynów setki a¿ do tysi¹ca.
+Each of 1000 coupons is replicated 100 times before the procedure. This replication step is not needed to get this certain results although it will be even more clear. Remainder we looking for set of coupons which sum to full hundreds (100, 200, ...) up to 1000.
 
 ```{r}
 library(adagio)
 
-cupon_we_have = rep(both$wygenerowane,100)
+cupon_we_have = rep(both$generated,100)
 
 cupon_we_want = seq(100,1000,100)
 
@@ -93,20 +94,19 @@ print(solution$profit)
 
 ```
 
-Wykorzystuj¹c kupony z bazy danych nie jest mozliwe osi¹gniêcie jakiegokolwiek zysku.
+Taking into account only coupons provided there is no chance to win anything.  
+This seems to no be surprising when we know from what sequences the coupons come from.  
+The question is about potential existence of other coupons which might enable to win something.  
 
-*Dodatek ukazuj¹cy co gdyby na kuponach by³y liczby z rozk³adu ci¹g³ego (zaokr¹glone do ca³kowitych):*
 
-Symulacja z kuponami z rozk³adu ci¹g³ego z zaokraglonymi wartoœciami. Postaramy siê odnaleŸæ jak najwiêcej 1000 ¿³otych.
-
-```{r}
+```{r, echo = FALSE, eval = FALSE}
 set.seed(1234)
 
 cupon_we_have = round(c(runif(1000,26,750)))
 
 hist(cupon_we_have,10)
 
-cupon_we_want=c(1000)
+cupon_we_want = 1000
 
 prof = 0
 
@@ -131,5 +131,3 @@ c = c[sort(as.numeric(names(c)),index.return=TRUE)$ix]
 c = c[!names(c)==0]
 c
 ```
-
-Wygrana przy tym konkretnym losowaniu mog³aby osi¹gn¹æ `r (prof-1)` tysiêcy z³otych. Dla innych losowañ wartoœci kuponów z zaprezentowanego rozk³adu, wygrane s¹ bardzo zbli¿one. Dlatego z oczywistych wzglêdów w konkursie Amino zaimplementowano szczególny algorytm generowania liczb losowych. Jednak pytaniem pozostaje jak czesto i czy wogole wystêpuj¹ kupony pozwalaj¹ce na wygran¹.
