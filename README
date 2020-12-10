@@ -1,8 +1,8 @@
 How to orginze perfect lottery where people never win anything - Amino KasaRomana
 
-TL;DR
-To create a perfect lottery you have to hire a matematician who develop for you a perfect scenerio in which people always loose under simply for them rules and with feeling that winning might be close. 
+TL;DR Knapsack; Kasa Romana; Algorithm
+To create a perfect lottery you have to hire a matematician who develop for you a perfect scenerio in which people always lose under simply rules and with feeling that winning might be very close.
 Rules: coupons with different values where cash in might be a set of them which sum to full hundreds (100, 200, ..., 900) Up to 1000.
 Algorithm to generate coupons values ... multiplication of 13 with optionally added 165.
-We have coupons like 178, 26 , ... which never allow to win.
+We have set of coupons like 91, 195, 299, 399, ..., 998 which never allow to win.
 For more info check the repo.

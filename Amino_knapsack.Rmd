@@ -1,5 +1,5 @@
 ---
-title: "How to orginze perfect lottery where people never win anything - Amino KasaRomana"
+title: "How to organize perfect lottery where people never win anything - Amino KasaRomana"
 author: "Maciej Nasinski"
 date: "`r Sys.Date()`"
 output: 
@@ -14,13 +14,13 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-In Poland there is a very popular lottery organized by a Amino food company named Kasa Romana.   
+In Poland there is a very popular lottery organized by the Amino food company named Kasa Romana.   
 It was established first time in 90's and the last attempt known by me in the 2016.  
-There were gathered a sufficient data about it because of the YouTube channel which testing certain products in thousands during some promations.  
+There were gathered a sufficient data about it because of the YouTube channel which testing certain products in thousands during promotions.  
 [BezKanalu YouTube channel](https://www.facebook.com/BezKanalu/) brought precisely 1002 coupons from last event.   
 The main objectives are to find patterns for this data and make sure if the coupons give any chance to win some real money.  
-The main rule is that people could win money if the have a set of coupons which sum to full hundreds (100, 200, ...) up to 1000.  
-The knapsack algorithm was used to check if there are some combinations of coupons which enable to win some money.  
+The main rule is that people could win money if they have a set of coupons which sum to full hundreds (100, 200, ..., 900) up to 1000.  
+The knapsack algorithm was used to check if there are some combinations of coupons which enable to win any money.  
 All processing is done from R programming environment.  
 
 Loading the data:
@@ -38,7 +38,7 @@ Sorted table of frequencies:
 sort(table(coupons))
 ```
 
-Histrogram might be helpful to find certain patterns:
+Histogram might be helpful to find certain patterns:
 
 ```{r}
 hist(coupons,breaks=100)
@@ -50,20 +50,22 @@ hist(coupons,breaks=100)
 - multiplication of 13 plus 165
 
 ```{r}
-rep13 = sapply(1:52, function(x) 13*x)
+rep13 = sapply(2:50, function(x) 13*x)
 
-rep2_13 = sapply(0:45, function(x) 165 + (13*x))
+rep2_13 = 165 + c(0, head(rep13, -5))
+```
 
+Proof that all coupons are covered by this 2 sequences.
+
+```{r}
 all(coupons %in% c(rep13, rep2_13))
 ```
 
-All of our coupons comes from this 2 sequences.
-
-Compering coupons with artificially generated ones form two presented sequences.
+Comparing coupons with artificially generated ones form two presented sequences.
 
 ```{r}
-a = sort(c(unique(coupons),178)) # one coupon has to be added 165 + 13
-b = sort(c(sapply(0:45,function(x) 165+(13*x)),sapply(2:50,function(x) (13*x))))
+a = sort(c(unique(coupons)))
+b = sort(c(rep2_13, rep13))
 
 both = data.frame(real = a, generated = b)
 
@@ -76,7 +78,7 @@ tail(both)
 
 Knapsack is an optimization method, linear programming for integers.
 
-Each of 1000 coupons is replicated 100 times before the procedure. This replication step is not needed to get this certain results although it will be even more clear. Remainder we looking for set of coupons which sum to full hundreds (100, 200, ...) up to 1000.
+Each of 1000 coupons is replicated 100 times before the procedure. This replication step is not needed to get this certain results although it will be even more clear. Remainder we looking for set of coupons which sum to full hundreds (100, 200, ..., 900) up to 1000.
 
 ```{r}
 library(adagio)
@@ -95,9 +97,9 @@ print(solution$profit)
 ```
 
 Taking into account only coupons provided there is no chance to win anything.  
-This seems to no be surprising when we know from what sequences the coupons come from.  
+A popular sitatutaion might be that people gathered coupons where only 1 additional polish zloty is needed to cash in.
+This seems to not be surprising where we know coupons sequences patterns.  
 The question is about potential existence of other coupons which might enable to win something.  
-
 
 ```{r, echo = FALSE, eval = FALSE}
 set.seed(1234)
